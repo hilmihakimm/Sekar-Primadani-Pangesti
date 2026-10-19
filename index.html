@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Something for You 💗</title>
+  <style>
+    :root { --pink:#ffb6d5; --rose:#ff5d9e; --night:#100d20; --cream:#fff7fb; }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; min-height:100vh; overflow:hidden; color:var(--cream);
+      font-family: Georgia, "Times New Roman", serif;
+      background: radial-gradient(circle at 50% 20%, #372047 0%, #171326 48%, #090812 100%);
+      display:flex; align-items:center; justify-content:center; text-align:center;
+    }
+    .glow { position:fixed; width:260px; height:260px; border-radius:50%; filter:blur(80px); opacity:.25; pointer-events:none; }
+    .g1 { background:#ff4f9a; top:-80px; left:-80px; }
+    .g2 { background:#a16bff; bottom:-100px; right:-70px; }
+    main { position:relative; z-index:2; width:min(92%,650px); padding:28px 20px; }
+    .eyebrow { letter-spacing:.22em; text-transform:uppercase; color:#ffc7df; font:12px Arial,sans-serif; }
+    h1 { font-size:clamp(2rem,7vw,4rem); line-height:1.12; margin:18px 0 12px; font-weight:normal; }
+    .subtitle { font:15px/1.7 Arial,sans-serif; color:#f4dce9; }
+    .clock { display:flex; justify-content:center; gap:clamp(8px,3vw,22px); margin:28px 0; }
+    .unit { min-width:65px; padding:14px 10px; border:1px solid #ffffff35; border-radius:16px; background:#ffffff0d; box-shadow:0 0 24px #ff72ad12; }
+    .num { font:clamp(1.8rem,6vw,3rem) Arial,sans-serif; color:#fff; text-shadow:0 0 20px #ff5d9e80; }
+    .label { margin-top:7px; font:10px Arial,sans-serif; color:#f4bfd8; letter-spacing:.12em; text-transform:uppercase; }
+    #surprise { display:none; animation:fadeIn 1.2s ease both; }
+    #giftLink { display:inline-block; color:#fff; border-bottom:1px solid #ffb6d5; padding:8px 3px; margin-top:18px; font:16px Arial,sans-serif; text-decoration:none; }
+    #giftLink:hover { color:#ffb6d5; }
+    .note { color:#d9c4d7; font:12px/1.6 Arial,sans-serif; margin-top:25px; }
+    canvas { position:fixed; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
+    .heart { position:fixed; bottom:-30px; color:#ff9fc9; opacity:.7; animation:floatUp 9s linear infinite; z-index:0; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(12px) scale(.98); } to { opacity:1; transform:none; } }
+    @keyframes floatUp { to { transform:translateY(-110vh) rotate(25deg); opacity:0; } }
+    @media(max-width:420px) { .unit { min-width:58px; padding:12px 7px; } .subtitle {font-size:14px;} }
+  </style>
+</head>
+<body>
+  <div class="glow g1"></div><div class="glow g2"></div>
+  <canvas id="fireworks"></canvas>
+  <main>
+    <div class="eyebrow">a little surprise is waiting</div>
+    <section id="countdownSection">
+      <h1>Sabar sebentar ya,<br>Sayang… 💗</h1>
+      <div class="subtitle">Ada sesuatu yang sudah aku siapkan khusus buat kamu.<br>Kita tunggu sampai waktunya tiba, ya.</div>
+      <div class="clock" aria-label="Hitung mundur">
+        <div class="unit"><div class="num" id="days">00</div><div class="label">Hari</div></div>
+        <div class="unit"><div class="num" id="hours">00</div><div class="label">Jam</div></div>
+        <div class="unit"><div class="num" id="minutes">00</div><div class="label">Menit</div></div>
+        <div class="unit"><div class="num" id="seconds">00</div><div class="label">Detik</div></div>
+      </div>
+      <div class="subtitle">Menuju 20 Oktober 2026 · 00.00 WIB</div>
+    </section>
+    <section id="surprise">
+      <h1>HAPPY BIRTHDAY,<br>SAYANGGG!! 🎆❤️</h1>
+      <div class="subtitle">Selamat bertambah usia, Sayang.<br>Ada sesuatu untuk kamu… 💌</div>
+      <a id="giftLink" href="GANTI_DENGAN_LINK_KADO_SEKAR" target="_blank" rel="noopener">🔗 Buka kado ulang tahunmu di sini</a>
+      <div class="note">Klik link di atas kalau kamu sudah siap membuka kadomu. 💗</div>
+    </section>
+  </main>
+  <script>
+    // Target tengah malam WIB. Bulan di JavaScript dimulai dari 0, jadi 9 = Oktober.
+    const target = new Date('2026-10-20T00:00:00+07:00').getTime();
+    const $ = id => document.getElementById(id);
+    let fireworksStarted = false;
+    function updateCountdown() {
+      const remaining = target - Date.now();
+      if (remaining <= 0) {
+        $('countdownSection').style.display = 'none';
+        $('surprise').style.display = 'block';
+        if (!fireworksStarted) { fireworksStarted = true; startFireworks(); }
+        return;
+      }
+      $('days').textContent = String(Math.floor(remaining / 86400000)).padStart(2,'0');
+      $('hours').textContent = String(Math.floor((remaining % 86400000) / 3600000)).padStart(2,'0');
+      $('minutes').textContent = String(Math.floor((remaining % 3600000) / 60000)).padStart(2,'0');
+      $('seconds').textContent = String(Math.floor((remaining % 60000) / 1000)).padStart(2,'0');
+    }
+    updateCountdown(); setInterval(updateCountdown, 250);
+
+    // Hati kecil dekoratif.
+    for (let i=0; i<9; i++) {
+      const heart = document.createElement('div');
+      heart.className = 'heart'; heart.textContent = ['♡','♥','✧'][i%3];
+      heart.style.left = (Math.random()*100)+'%';
+      heart.style.animationDelay = (Math.random()*8)+'s';
+      heart.style.fontSize = (14+Math.random()*18)+'px';
+      document.body.appendChild(heart);
+    }
+
+    // Kembang api canvas: mulai tepat setelah countdown mencapai nol.
+    const canvas = $('fireworks'), ctx = canvas.getContext('2d');
+    let particles = [], rockets = [], raf = null;
+    function resize() { canvas.width = innerWidth * devicePixelRatio; canvas.height = innerHeight * devicePixelRatio; ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }
+    addEventListener('resize', resize); resize();
+    function launch() {
+      const x = Math.random()*innerWidth, y = innerHeight*(.15+Math.random()*.42);
+      const colors = ['#ff72b6','#ffd166','#8be9fd','#c4a1ff','#ffffff','#ff8a65'];
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      for (let i=0; i<75; i++) {
+        const angle = Math.PI*2*i/75, speed = 1.2+Math.random()*4.2;
+        particles.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life:55+Math.random()*35,max:90,color,size:1+Math.random()*2});
+      }
+    }
+    function frame() {
+      ctx.fillStyle = 'rgba(10,8,18,0.20)'; ctx.fillRect(0,0,innerWidth,innerHeight);
+      if (Math.random()<.09) launch();
+      particles = particles.filter(p=>p.life>0);
+      for (const p of particles) {
+        p.x+=p.vx; p.y+=p.vy; p.vy+=.025; p.vx*=.99; p.vy*=.99; p.life--;
+        ctx.globalAlpha = Math.max(0,p.life/p.max);
+        ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha=1; raf=requestAnimationFrame(frame);
+    }
+    function startFireworks() {
+      canvas.style.background='rgba(8,6,16,.15)';
+      for(let i=0;i<5;i++) setTimeout(launch,i*250);
+      frame();
+    }
+  </script>
+</body>
+</html>
