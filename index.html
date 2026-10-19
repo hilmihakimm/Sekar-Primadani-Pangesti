@@ -60,8 +60,7 @@
   </main>
   <script>
     // Target tengah malam WIB. Bulan di JavaScript dimulai dari 0, jadi 9 = Oktober.
-    const testMode = new URLSearchParams(window.location.search).get('test') === '1';
-const target = testMode ? Date.now() - 1000 : new Date('2026-10-20T00:00:00+07:00').getTime();
+    const target = new Date('2026-10-20T00:00:00+07:00').getTime();
     const $ = id => document.getElementById(id);
     let fireworksStarted = false;
     function updateCountdown() {
